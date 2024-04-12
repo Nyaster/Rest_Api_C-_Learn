@@ -21,8 +21,6 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        Console.WriteLine(connectionString);
         app.UseHttpsRedirection();
         app.MapControllers();
         app.Run();
