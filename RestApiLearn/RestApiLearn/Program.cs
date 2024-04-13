@@ -1,3 +1,6 @@
+using RestApiLearn.Repositories;
+using RestApiLearn.Services;
+
 namespace RestApiLearn;
 
 public class Program
@@ -12,6 +15,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers().AddXmlSerializerFormatters();
+        builder.Services.AddScoped<IAnimalService, AnimalService>();
+        builder.Services.AddSingleton<IAnimalRepository, AnimalRepository>();
 
         var app = builder.Build();
 
