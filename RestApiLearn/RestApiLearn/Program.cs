@@ -17,6 +17,8 @@ public class Program
         builder.Services.AddControllers().AddXmlSerializerFormatters();
         builder.Services.AddScoped<IAnimalService, AnimalService>();
         builder.Services.AddSingleton<IAnimalRepository, AnimalRepository>();
+        builder.Services.AddSingleton<IVisitistRepository, VisitsRepository>();
+        builder.Services.AddScoped<IVisitsService, VisitsService>();
 
         var app = builder.Build();
 
@@ -26,6 +28,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
         app.UseHttpsRedirection();
         app.MapControllers();
         app.Run();
