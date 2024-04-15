@@ -30,7 +30,7 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
         return _animalRepository.DeleteAnimal(id);
     }
 
-    public Animal ConvertDtOtoAnimal(AnimalDTO animal)
+    public Animal ConvertDtOtoAnimal(int id, AnimalDTO animal)
     {
         var createdAnimalColor = Color.FromName(animal.Color);
         Animal createdAnimal = new Animal();
@@ -39,11 +39,17 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
             return null;
         }
 
-        createdAnimal.Id = animal.Id;
+        createdAnimal.Id = id;
         createdAnimal.Name = animal.Name;
         createdAnimal.Weight = animal.Weight;
         createdAnimal.Color = createdAnimalColor;
         return createdAnimal;
+    }
+
+    public Animal ConvertDtOtoAnimal(AnimalDTO animalDto)
+    {
+        var max = _animalRepository.FetchAnimals().Max(x => x.Id) + 1;
+        return ConvertDtOtoAnimal(max, animalDto);
     }
 
     public bool EditAnimal(Animal animal)

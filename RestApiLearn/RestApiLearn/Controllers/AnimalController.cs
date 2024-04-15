@@ -33,7 +33,7 @@ public class AnimalController(IAnimalService animalService) : ControllerBase
     [HttpPut("{id:int}")]
     public IActionResult EditAnimal(int id, AnimalDTO animalDto)
     {
-        var createdAnimal = _animalService.ConvertDtOtoAnimal(animalDto);
+        var createdAnimal = _animalService.ConvertDtOtoAnimal(id,animalDto);
         createdAnimal.Id = id;
         var editAnimal = _animalService.EditAnimal(createdAnimal);
         return editAnimal ? Ok("Animal edidet succefuly") : NotFound("Animal with this id not found");
@@ -42,6 +42,7 @@ public class AnimalController(IAnimalService animalService) : ControllerBase
     [HttpPost]
     public IActionResult AddAnimal(AnimalDTO animal)
     {
+        
         var createdAnimal = _animalService.ConvertDtOtoAnimal(animal);
         var addAnimal = _animalService.AddAnimal(createdAnimal);
         return addAnimal ? Ok("Animal is added") : Conflict("Same animal is already exist");
