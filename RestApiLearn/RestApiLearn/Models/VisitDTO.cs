@@ -2,9 +2,9 @@
 
 public class VisitDto
 {
-    public DateTime VisitDate { get; set; }
-    public Animal Animal { get; set; }
-    public string Description { get; set; }
+    public DateTime VisitDate { get; }
+    public Animal Animal { get; }
+    public string Description { get; }
     public int Price;
 
     public VisitDto(DateTime dateTime, Animal animal, string description, int price)
