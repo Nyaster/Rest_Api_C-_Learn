@@ -41,6 +41,12 @@ public class VisitsService : IVisitsService
 
     public IEnumerable<Visit> GetVisits()
     {
-        return _visitistRepository.GetVisits();
+        List<VisitDto> visitDtos = new List<VisitDto>();
+        var enumerable = _visitistRepository.GetVisits();
+        foreach (var visit in enumerable)
+        {
+            visitDtos.Add(new VisitDto(visit.VisitDate,_animalService.GetAnimal(visit.AnimalId),visit.Description,visit.Price));
+        }
+        return enumerable;
     }
 }

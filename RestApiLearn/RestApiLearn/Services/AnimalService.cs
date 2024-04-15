@@ -10,7 +10,8 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
 
     public IEnumerable<Animal> GetAnimals()
     {
-        return _animalRepository.FetchAnimals();
+        var fetchAnimals = _animalRepository.FetchAnimals();
+        return fetchAnimals;
     }
 
     public Animal? GetAnimal(int id)
