@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Data.SqlClient;
+using System.Drawing;
 using RestApiLearn.Models;
 
 namespace RestApiLearn.Repositories;
@@ -16,6 +17,17 @@ public class AnimalRepository : IAnimalRepository
 
     public Animal? FetchAnimal(int id)
     {
+        SqlConnection sqlConnection = new SqlConnection("Server=db-mssql;Database=Server=db-mssql ;Database=2019SBD;Trusted_Connection=True;Trusted_Connection=True;");
+        SqlCommand sqlCommand = new SqlCommand();
+        sqlConnection.Open();
+        sqlCommand.Connection = sqlConnection;
+        sqlCommand.CommandText = "Select id from Film";
+        var sqlDataReader = sqlCommand.ExecuteReader();
+        while (sqlDataReader.Read())
+        {
+            Console.WriteLine(sqlDataReader["id"]);
+        }
+
         return _animals.FirstOrDefault(x => x.Id == id);
     }
 
