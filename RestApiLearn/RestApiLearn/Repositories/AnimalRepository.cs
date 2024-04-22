@@ -6,65 +6,119 @@ namespace RestApiLearn.Repositories;
 
 public class AnimalRepository : IAnimalRepository
 {
-    private List<Animal> _animals = new List<Animal>()
+    private readonly IConfiguration _configuration;
+
+    public AnimalRepository(IConfiguration configuration)
     {
-        new Animal(1, AnimalType.CAT, "Morpy", 24, Color.Gray),
-        new Animal(2, AnimalType.DOG, "Rex", 30, Color.Black),
-        new Animal(3, AnimalType.FOX, "Holo", 7, Color.SaddleBrown),
-        new Animal(4, AnimalType.WOLF, "Faust", 22, Color.Gray),
-        new Animal(5, AnimalType.CAT, "Nyan", 11, Color.Blue),
-    };
+        _configuration = configuration;
+    }
 
     public Animal? FetchAnimal(int id)
     {
-        SqlConnection sqlConnection = new SqlConnection("Server=db-mssql;Database=Server=db-mssql ;Database=2019SBD;Trusted_Connection=True;Trusted_Connection=True;");
-        SqlCommand sqlCommand = new SqlCommand();
-        sqlConnection.Open();
-        sqlCommand.Connection = sqlConnection;
-        sqlCommand.CommandText = "Select id from Film";
-        var sqlDataReader = sqlCommand.ExecuteReader();
-        while (sqlDataReader.Read())
+        Animal animal = new Animal();
+        using (SqlConnection sqlConnection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
         {
-            Console.WriteLine(sqlDataReader["id"]);
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlConnection.Open();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText =
+                "Select IdAnimal, Name,Description,Category,Area from Animal where IdAnimal=@IdAnimal";
+            sqlCommand.Parameters.AddWithValue("@IdAnimal", id);
+            var sqlDataReader = sqlCommand.ExecuteReader();
+
+            while (sqlDataReader.Read())
+            {
+                animal.Id = (int)sqlDataReader["IdAnimal"];
+                animal.Name = sqlDataReader["Name"].ToString();
+                animal.Description = sqlDataReader["Description"].ToString();
+                animal.Category = sqlDataReader["Category"].ToString();
+                animal.Area = sqlDataReader["Area"].ToString();
+            }
         }
 
-        return _animals.FirstOrDefault(x => x.Id == id);
+        return animal;
     }
 
-    public IEnumerable<Animal> FetchAnimals()
+    public IEnumerable<Animal> FetchAnimals(String orderBy)
     {
-        return _animals;
+        List<Animal> animals = new List<Animal>();
+        using (SqlConnection sqlConnection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlConnection.Open();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "Select IdAnimal, Name,Description,Category,Area from Animal order by "+orderBy;
+            var sqlDataReader = sqlCommand.ExecuteReader();
+
+            while (sqlDataReader.Read())
+            {
+                Animal animal = new Animal();
+                animal.Id = (int)sqlDataReader["IdAnimal"];
+                animal.Name = sqlDataReader["Name"].ToString();
+                animal.Description = sqlDataReader["Description"].ToString();
+                animal.Category = sqlDataReader["Category"].ToString();
+                animal.Area = sqlDataReader["Area"].ToString();
+                animals.Add(animal);
+            }
+        }
+
+        return animals;
     }
 
     public bool DeleteAnimal(int id)
     {
-        var animal = _animals.Find(x => x.Id == id);
-        return animal != null;
+        var executeNonQuery = 0;
+        using (SqlConnection sqlConnection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlConnection.Open();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = " delete from Animal where IdAnimal=@IdAnimal";
+            sqlCommand.Parameters.AddWithValue("@IdAnimal", id);
+
+            executeNonQuery = sqlCommand.ExecuteNonQuery();
+        }
+
+        return executeNonQuery > 0;
     }
 
     public bool UpdateAnimal(Animal animal)
     {
-        var contains = _animals.Contains(animal);
-        if (contains)
+        var executeNonQuery = 0;
+        using (SqlConnection sqlConnection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
         {
-            _animals.Remove(animal);
-            _animals.Add(animal);
-            return true;
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlConnection.Open();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText =
+                " update from Animal set Name=@Name,Description=@Description,Area=@Area,Category=@Category where IdAnimal=@IdAnimal";
+            sqlCommand.Parameters.AddWithValue("@Name", animal.Name);
+            sqlCommand.Parameters.AddWithValue("@Description", animal.Description);
+            sqlCommand.Parameters.AddWithValue("@Area", animal.Area);
+            sqlCommand.Parameters.AddWithValue("@Category", animal.Category);
+            executeNonQuery = sqlCommand.ExecuteNonQuery();
         }
-        else
-        {
-            return false;
-        }
+
+        return executeNonQuery > 0;
     }
 
     public bool AddAnimal(Animal animal)
     {
-        if (_animals.Contains(animal))
+        var executeNonQuery = 0;
+        using (SqlConnection sqlConnection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
         {
-            return false;
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlConnection.Open();
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText =
+                " insert into Animal(Name,Description,Category,Area)  values (@Name,@Description,@Category,@Area)";
+            sqlCommand.Parameters.AddWithValue("@Name", animal.Name);
+            sqlCommand.Parameters.AddWithValue("@Description", animal.Description);
+            sqlCommand.Parameters.AddWithValue("@Area", animal.Area);
+            sqlCommand.Parameters.AddWithValue("@Category", animal.Category);
+            executeNonQuery = sqlCommand.ExecuteNonQuery();
         }
 
-        _animals.Add(animal);
-        return true;
+        return executeNonQuery > 0;
     }
 }

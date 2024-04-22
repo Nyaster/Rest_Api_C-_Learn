@@ -5,7 +5,7 @@ namespace RestApiLearn.Services;
 
 public interface IAnimalService
 {
-    public IEnumerable<Animal> GetAnimals();
+    public IEnumerable<Animal> GetAnimals(String orderBy);
     Animal? GetAnimal(int id);
     bool AddAnimal(Animal animal);
     bool RemoveAnimal(int id);

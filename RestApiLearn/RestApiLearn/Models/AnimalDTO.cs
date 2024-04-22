@@ -5,16 +5,16 @@ namespace RestApiLearn.Models;
 
 public class AnimalDTO
 {
-    public AnimalDTO(AnimalType animalType, string name, double weight, string color)
+    public AnimalDTO(string category, string name, string description, string area)
     {
-        AnimalType = animalType;
+        Category = category;
         Name = name;
-        Weight = weight;
-        Color = color;
+        Description = description;
+        Area = area;
     }
-    
-    [Required] public AnimalType AnimalType { get; }
+
+    [Required] public String Category { get; }
     [Required] public string Name { get; }
-    [Required] public double Weight { get; }
-    [Required] public String Color { get; }
+    [Required] public string Description { get; }
+    [Required] public String Area { get; }
 }

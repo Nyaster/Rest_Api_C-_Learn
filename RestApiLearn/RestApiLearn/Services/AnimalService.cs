@@ -8,9 +8,14 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
 {
     private readonly IAnimalRepository _animalRepository = animalRepository;
 
-    public IEnumerable<Animal> GetAnimals()
+    public IEnumerable<Animal> GetAnimals(String orderBy)
     {
-        var fetchAnimals = _animalRepository.FetchAnimals();
+        string[] validColumns = { "idanimal", "name", "description", "category", "area" };
+        if (!validColumns.Contains(orderBy.ToLower()))
+        {
+            throw new ArgumentException("Invalid column name for ordering.");
+        }
+        var fetchAnimals = _animalRepository.FetchAnimals(orderBy);
         return fetchAnimals;
     }
 
@@ -32,24 +37,18 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
 
     public Animal ConvertDtOtoAnimal(int id, AnimalDTO animal)
     {
-        var createdAnimalColor = Color.FromName(animal.Color);
         Animal createdAnimal = new Animal();
-        if (!createdAnimalColor.IsKnownColor)
-        {
-            return null;
-        }
-
         createdAnimal.Id = id;
         createdAnimal.Name = animal.Name;
-        createdAnimal.Weight = animal.Weight;
-        createdAnimal.Color = createdAnimalColor;
+        createdAnimal.Category = animal.Category;
+        createdAnimal.Description = animal.Description;
+        createdAnimal.Area = animal.Area;
         return createdAnimal;
     }
 
     public Animal ConvertDtOtoAnimal(AnimalDTO animalDto)
     {
-        var max = _animalRepository.FetchAnimals().Max(x => x.Id) + 1;
-        return ConvertDtOtoAnimal(max, animalDto);
+        return ConvertDtOtoAnimal(-20, animalDto);
     }
 
     public bool EditAnimal(Animal animal)

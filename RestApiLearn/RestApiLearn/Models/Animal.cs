@@ -19,13 +19,13 @@ public class Animal : IEquatable<Animal>
         return Id;
     }
 
-    public Animal(int id, AnimalType animalType, string name, double weight, Color color)
+    public Animal(int id, string name, string category, string area, string description)
     {
         Id = id;
-        AnimalType = animalType;
         Name = name;
-        Weight = weight;
-        Color = color;
+        Category = category;
+        Area = area;
+        Description = description;
     }
 
     public Animal()
@@ -33,14 +33,10 @@ public class Animal : IEquatable<Animal>
     }
 
     public int Id { get; set; }
-
-    [Required]
-    [EnumDataType(typeof(AnimalType))]
-    public AnimalType AnimalType { get; set; }
-
     [Required] public string Name { get; set; }
-    [Required] public double Weight { get; set; }
-    [Required] public Color Color { get; set; }
+    [Required] public string Category { get; set; }
+    [Required] public string Area { get; set; }
+    public string Description { get; set; }
 
     public bool Equals(Animal? other)
     {

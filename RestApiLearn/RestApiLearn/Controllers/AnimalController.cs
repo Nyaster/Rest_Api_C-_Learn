@@ -12,9 +12,9 @@ public class AnimalController(IAnimalService animalService) : ControllerBase
     private readonly IAnimalService _animalService = animalService;
 
     [HttpGet]
-    public IActionResult GetAnimals()
+    public IActionResult GetAnimals(String orderBy = "Name")
     {
-        var animals = _animalService.GetAnimals();
+        var animals = _animalService.GetAnimals(orderBy);
         return Ok(animals);
     }
 
