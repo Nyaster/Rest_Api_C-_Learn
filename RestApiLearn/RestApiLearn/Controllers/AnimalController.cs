@@ -5,7 +5,7 @@ using RestApiLearn.Services;
 
 namespace RestApiLearn.Controllers;
 
-[Route("/animal")]
+[Route("/animals")]
 [ApiController]
 public class AnimalController(IAnimalService animalService) : ControllerBase
 {
