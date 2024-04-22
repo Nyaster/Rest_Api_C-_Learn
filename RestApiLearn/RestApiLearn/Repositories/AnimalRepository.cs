@@ -64,7 +64,6 @@ public class AnimalRepository : IAnimalRepository
 
         return animals;
     }
-
     public bool DeleteAnimal(int id)
     {
         var executeNonQuery = 0;

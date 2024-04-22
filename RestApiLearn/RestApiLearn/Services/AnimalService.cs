@@ -13,7 +13,7 @@ public class AnimalService(IAnimalRepository animalRepository) : IAnimalService
         string[] validColumns = { "idanimal", "name", "description", "category", "area" };
         if (!validColumns.Contains(orderBy.ToLower()))
         {
-            throw new ArgumentException("Invalid column name for ordering.");
+            orderBy = "name";
         }
         var fetchAnimals = _animalRepository.FetchAnimals(orderBy);
         return fetchAnimals;
